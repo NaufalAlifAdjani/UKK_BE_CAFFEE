@@ -12,18 +12,18 @@ module.exports = {
       id_transaksi: {
         type: Sequelize.INTEGER,
         allowNull:false,
-        // references: {
-        //   model: "transaksi",
-        //   key: "id_transaksi"
-        // }
+        references: {
+          model: "transaksi",
+          key: "id_transaksi"
+        }
       },
       id_menu: {
         type: Sequelize.INTEGER,
         allowNull:false,
-        // references: {
-        //   model: "menu",
-        //   key: "id_menu"
-        // }
+        references: {
+          model: "menu",
+          key: "id_menu"
+        }
       },
       harga: {
         type: Sequelize.INTEGER,

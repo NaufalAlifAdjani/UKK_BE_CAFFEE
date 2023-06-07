@@ -12,13 +12,12 @@ exports.getAllMeja = async (request, response) => {
 };
 
 exports.findMeja = async (request, response) => {
-  let nomor_meja = request.body.nomor_meja
-  let status_meja = request.body.status_meja
+  let keyword = request.body.keyword;
   let meja = await modelMeja.findAll({
     where: {
       [Op.or]: [
-        { nomor_meja: { [Op.substring]: nomor_meja } },
-        { status_meja: { [Op.substring]: status_meja } },
+        { nomor_meja: { [Op.substring]: keyword } },
+        { status_meja: { [Op.substring]: keyword } },
       ],
     },
   });

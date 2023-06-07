@@ -7,13 +7,14 @@ app.use(express.json())
 let transaksiController = require("../controller/transaksi.controller")
 
 //call authorize
-const { authorizeKasir } = require(`../controller/auth.controller`)
+const auth = require(`../auth/auth`)
 
 // endpoint
-app.get("/get", [authorizeKasir],transaksiController.getAlltransaksi)
-app.post("/add", [authorizeKasir],transaksiController.addtransaksi)
-app.put("/update/:id", [authorizeKasir],transaksiController.updatetransaksi)
-app.delete("/delete/:id", [authorizeKasir],transaksiController.deletetransaksi)
+// app.get("/getdetail",transaksiController.getAlldetail)
+app.get("/get", auth.authVerify,transaksiController.getAlltransaksi)
+app.post("/add", auth.authVerify,transaksiController.addtransaksi)
+app.put("/update/:id", auth.authVerify,transaksiController.updatetransaksi)
+app.delete("/delete/:id", auth.authVerify,transaksiController.deletetransaksi)
 
 
 module.exports = app

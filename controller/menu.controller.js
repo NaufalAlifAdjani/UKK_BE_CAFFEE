@@ -14,15 +14,14 @@ exports.getAllMenu = async (request, response) => {
 };
 
 exports.findMenu = async (request, response) => {
-  let nama_menu = request.body.nama_menu;
-  let jenis = request.body.jenis;
-  let harga = request.body.harga;
+  let keyword = request.body.keyword;
   let menus = await modelMenu.findAll({
     where: {
       [Op.or]: [
-        { nama_menu: { [Op.substring]: nama_menu } },
-        { jenis: { [Op.substring]: jenis } },
-        { harga: { [Op.substring]: harga } },
+        { id_menu: { [Op.substring]: keyword } },
+        { nama_menu: { [Op.substring]: keyword } },
+        { jenis: { [Op.substring]: keyword } },
+        { harga: { [Op.substring]: keyword } },
       ],
     },
   });
@@ -69,40 +68,46 @@ exports.addMenu = (request, response) => {
   });
 };
 
-exports.updateMenu = async (request, response) => {
-  upload(request, response, async (err) => {
-    if (err) {
-      return response.json({ message: err });
+exports.updatemenu = (request, response) => {
+  upload(request, response, async (error) => {
+    if (error) {
+      return response.json({ message: error });
     }
+
     let id_menu = request.params.id;
-    let dataMenu = {
+
+    let datamenu = {
       nama_menu: request.body.nama_menu,
-      gambar: request.file.filename,
       jenis: request.body.jenis,
       deskripsi: request.body.deskripsi,
       harga: request.body.harga
       
     };
-    console.log(dataMenu);
+    if (request.file && request.file.filename) {
+      datamenu.gambar = request.file.filename;
+    }
 
     if (request.file) {
-      const selectedMenu = await modelMenu.findOne({
+      const selectedUser = await modelMenu.findOne({
         where: { id_menu: id_menu },
       });
-      const oldgambarMenu = selectedMenu.gambar;
 
-      const pathImage = path.join(__dirname, `/../gambar`, oldgambarMenu);
-      if (fs.existsSync(pathImage)) {
-        fs.unlink(pathImage, (error) => console.log(error));
+      const oldFotoUser = selectedUser.gambar;
+
+      const patchFoto = path.join(__dirname, `../foto_menu`, oldFotoUser);
+
+      if (fs.existsSync(patchFoto)) {
+        fs.unlink(patchFoto, (error) => console.log(error));
       }
-      dataMenu.gambar = request.file.filename;
+      datamenu.gambar = request.file.filename;
     }
+
     modelMenu
-      .update(dataMenu, { where: { id_menu: id_menu } })
+      .update(datamenu, { where: { id_menu: id_menu } })
       .then((result) => {
         return response.json({
           success: true,
-          message: `Data Menu has been updated`,
+          message: `Data room menu has been update`,
         });
       })
       .catch((error) => {
@@ -113,6 +118,51 @@ exports.updateMenu = async (request, response) => {
       });
   });
 };
+
+// exports.updatemenu = async (request, response) => {
+//   upload(request, response, async (err) => {
+//     if (err) {
+//       return response.json({ message: err });
+//     }
+//     let id_menu = request.params.id;
+//     let dataMenu = {
+//       nama_menu: request.body.nama_menu,
+//       gambar: request.file.filename,
+//       jenis: request.body.jenis,
+//       deskripsi: request.body.deskripsi,
+//       harga: request.body.harga
+      
+//     };
+//     console.log(dataMenu);
+
+//     if (request.file) {
+//       const selectedMenu = await modelMenu.findOne({
+//         where: { id_menu: id_menu },
+//       });
+//       const oldgambarMenu = selectedMenu.gambar;
+
+//       const pathImage = path.join(__dirname, `/../gambar`, oldgambarMenu);
+//       if (fs.existsSync(pathImage)) {
+//         fs.unlink(pathImage, (error) => console.log(error));
+//       }
+//       dataMenu.gambar = request.file.filename;
+//     }
+//     modelMenu
+//       .update(dataMenu, { where: { id_menu: id_menu } })
+//       .then((result) => {
+//         return response.json({
+//           success: true,
+//           message: `Data Menu has been updated`,
+//         });
+//       })
+//       .catch((error) => {
+//         return response.json({
+//           success: false,
+//           message: error.message,
+//         });
+//       });
+//   });
+// };
 
 exports.deleteMenu = (request, response) => {
   let idMenu = request.params.id;

@@ -19,7 +19,6 @@ app.use(`/meja`, mejaRoute);
 const transaksiRoute=require(`./routes/transaksi.routes`);
 app.use(`/transaksi`, transaksiRoute);
 
-
 const auth = require(`./routes/auth.routes`)
 app.use(`/auth`, auth)
 
